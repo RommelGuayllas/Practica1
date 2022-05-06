@@ -1,0 +1,40 @@
+nombre :  implementar-libro 
+#  tomado de: https://jupyterbook.org/publish/gh-pages.html?highlight=github%20actions 
+#  Sólo se ejecuta cuando la rama principal de los cambios 
+en : 
+  push : 
+    ramas : 
+ -  principal 
+    #  Si tu repositorio git tiene la Jupyter Libro dentro de algunos subcarpeta junto a 
+    #  no relacionados de archivos, usted puede hacer esto sólo se ejecutan si un archivo dentro de ese específico 
+    #  carpeta ha sido modificado. 
+    # 
+    #  rutas: 
+    #  - algunos-subcarpeta/** 
+
+#  Este trabajo se instala las dependencias, se basa el libro, y lo empuja a `gh-pages` 
+trabajos : 
+  implementar libro : 
+    se ejecuta en :  ubuntu-última 
+    pasos : 
+ -  usos :  acciones/checkout@v2 
+
+    #  Instalar las dependencias 
+ -  nombre :  Configurar Python 3.7 
+      usos :  acciones/setup-python@v1 
+      con : 
+        python-versión :  3.7 
+
+ -  nombre :  Instalar las dependencias 
+      ejecutar :  | 
+ pip install-r requirements.txt 
+    #  Crear el libro 
+ -  nombre :  Construir el libro 
+      ejecutar :  | 
+ jupyter-libro de construir . 
+    #  Empujar el libro del HTML a github-páginas 
+ -  nombre :  GitHub Páginas acción 
+      usos :  peaceiris/actions-gh-pages@v3.6.1 
+      con : 
+        github_token :  ${{ secretos.GITHUB_TOKEN }} 
+        publish_dir :  ./_build/html 
